@@ -42,10 +42,10 @@ function Monarch_DrawText(text, font, x, y, panelWidth, defaultColor, alignX, al
 
             if word:sub(-2) == "**" then
                 word = word:sub(1, -3)
-                table.insert(line, {word = word, color = CONFIG.MAIN.COLOR.gold})
+                table.insert(line, {word = word, color = Color( 239, 168, 60)})
                 inGold = false
             else
-                table.insert(line, {word = word, color = inGold and CONFIG.MAIN.COLOR.gold or nil})
+                table.insert(line, {word = word, color = inGold and Color( 239, 168, 60) or nil})
             end
 
             lineWidth = lineWidth + wordWidth + surface.GetTextSize(" ")

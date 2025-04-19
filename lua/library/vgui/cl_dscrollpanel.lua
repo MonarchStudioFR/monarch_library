@@ -3,24 +3,23 @@ local PANEL = {}
 function PANEL:Init()
     self.VBar:SetWide(10)
 
-    -- Custom scrollbar painting
+    -- Style de la scrollbar
     function self.VBar:Paint(w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(50, 50, 50, 150))
     end
 
     function self.VBar.btnUp:Paint(w, h) end
-
     function self.VBar.btnDown:Paint(w, h) end
-    
+
     function self.VBar.btnGrip:Paint(w, h)
         draw.RoundedBox(8, 0, 0, w, h, Color(100, 100, 100, 150))
     end
 
-    -- Smooth scrolling effect
+    -- Smooth scroll vars
     self.targetScroll = 0
     self.currentScroll = 0
 
-    self.hasScrollbar = self.VBar:IsVisible()
+    -- On enlève tout ce qui modifie les enfants
 end
 
 function PANEL:SmoothScroll(delta)
@@ -35,28 +34,30 @@ function PANEL:OnMouseWheeled(delta)
 end
 
 function PANEL:Think()
-    self.currentScroll = Lerp(0.05, self.currentScroll, self.targetScroll)
+    self.currentScroll = Lerp(0.1, self.currentScroll, self.targetScroll)
     self.VBar:SetScroll(self.currentScroll)
 end
 
-function PANEL:UpdateChildrenWidth()
-    local hasScrollbar = self.VBar:IsVisible()
-    local widthAdjustment = hasScrollbar and cw(15) or 0
+-- On override PerformLayout pour que la scrollbar soit par-dessus
+function PANEL:PerformLayout(width, height)
+    local scrollBar = self.VBar
+    local canvas = self:GetCanvas()
 
-    for _, child in ipairs(self:GetCanvas():GetChildren()) do
-        if not child.originalWidth then
-            child.originalWidth = child:GetWide()
-        end
-        child:SetWide(child.originalWidth - widthAdjustment)
-    end
-end
+    -- On layout le canvas normalement
+    local canvasWidth = width
+    local canvasHeight = canvas:GetTall()
 
-function PANEL:PerformLayout()
-    self:UpdateChildrenWidth()
+    canvas:SetWide(canvasWidth)
+
+    scrollBar:SetUp(height, canvasHeight)
+    scrollBar:SetTall(height)
+    scrollBar:SetPos(width - scrollBar:GetWide(), 0) -- Important : positionné par-dessus à droite
+
+    canvas:SetPos(0, 0)
 end
 
 function PANEL:Paint(w, h)
-    -- No background paint
+    -- Pas de fond
 end
 
 vgui.Register("Monarch_ScrollPanel", PANEL, "DScrollPanel")

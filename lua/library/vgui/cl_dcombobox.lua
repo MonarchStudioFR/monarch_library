@@ -12,7 +12,7 @@ function PANEL:Init()
     self.DropButton:SetMouseInputEnabled(false)
     self.DropButton.ComboBox = self
 
-    self:SetFont("MAIN_Font:S16")
+    self:GetFont()
     self:SetTextColor(color_white)
 
     self:SetTall(22)

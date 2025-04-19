@@ -53,8 +53,18 @@ function PANEL:SetAllEnable(bEnable)
     self.AllCharacter = bEnable
 end
 
+function PANEL:SetRondedBox(bEnable)
+    self.RoundedBox = bEnable
+end
+
 function PANEL:Paint(intW, intH)
-    draw.RoundedBox(5, 0, 0, intW, intH, self:GetBackColor())  -- Utilisation de la couleur de fond définie
+
+    if self.RoundedBox then
+        draw.RoundedBox(5, 0, 0, intW, intH, self:GetBackColor())  -- Utilisation de la couleur de fond définie
+    else
+        surface.SetDrawColor(self:GetBackColor())
+        surface.DrawRect(0, 0, intW, intH)
+    end
 
     if not self.hasFocus and self:GetPlaceholder() ~= "" and self:GetText() == "" then
         draw.SimpleText(self:GetPlaceholder(), self:GetFont(), 5, intH * 0.5, self:GetTextColor(), 0, 1)
